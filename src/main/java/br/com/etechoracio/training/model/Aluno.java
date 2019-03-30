@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Entity(name = "EXERCICIO13")
 @Table(name = "TBL_ALUNO")
 public class Aluno extends BaseORM {
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "ID_ALUNO")
@@ -42,8 +43,15 @@ public class Aluno extends BaseORM {
 	@Column(name = "DT_CRIACAO")
 	@DateTimeFormat
 	private Date dataCriacao;
-	
-	@OneToOne(mappedBy="aluno", cascade = CascadeType.ALL)
+
+	@PrePersist
+	private void preencherDataCriacao() {
+		if (dataCriacao == null) {
+			dataCriacao = new Date();
+		}
+	}
+
+	@OneToOne(mappedBy = "aluno", cascade = CascadeType.ALL)
 	private Endereco endereco = new Endereco();
 
 }
